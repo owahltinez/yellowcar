@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- HTML metadata -->
+  <meta charset="UTF-8" />
+  <title>Yellow Car Game</title>
+  <meta name="description" content="Use AI as a judge to determine whether a car is yellow or not." />
+  <link rel="icon" type="image/jpg" href="./logo.png" />
+  <!-- <link rel="manifest" href="./manifest.webmanifest" /> -->
+
+  <!-- Social media preview images -->
+  <meta property="og:image" content="./logo.png">
+
+  <!-- Behave like a native app on the device homescreen -->
+  <meta name="theme-color" content="#000000">
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+  <!-- Homescreen icons -->
+  <link rel="apple-touch-icon" href="./logo.png" />
+
+  <!-- Capabilities-related metadata -->
+  <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+
+  <!-- Third party imports -->
+  <script src="https://unpkg.com/mancha@0.9" css="utils" init></script>
+
+  <!-- Service worker registration -->
+  <script>
+    navigator.serviceWorker.register('./sw.js').then(event => {
+      console.log('ServiceWorker registration successful:', event);
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        console.log('ServiceWorker controllerchange event:', navigator.serviceWorker.controller);
+      });
+    }, function (err) {
+      alert(`ServiceWorker registration failed: ${err}`);
+    });
+  </script>
+</head>
+
+<body class="p-0 m-0 w-full flex flex-col items-center justify-center" :data="{ image: null, result: null }">
+  <form :on:submit="oracle($event)" class="w-64 gap-y-2 flex flex-col">
+    <h1 class="text-xl font-bold text-center">Yellow Car Game</h1>
+    <div :show="!image" :on:click="document.querySelector('#picker').click()"
+      class="w-64 h-64 -ml-4px flex items-center justify-center border border-4 border-yellow-700 border-dashed cursor-pointer">
+      <span class="block">Select Image</span>
+    </div>
+    <div :show="image" :on:click="document.querySelector('#picker').click()"
+      class="w-64 h-64 -ml-4px flex items-center justify-center border border-4 cursor-pointer">
+      <img :src="image || ''" class="object-contain w-full h-full" alt="Input image" />
+    </div>
+    <input id="picker" :show="false" :on:change="loadImage($event)" type="file" accept="image/*" required />
+    <input type="submit" value="Analyze" :disabled="!image && !result"
+      class="p-2 disabled:bg-yellow-50 disabled:cursor-not-allowed bg-yellow-100 hover:bg-yellow-200 border border-4 border-yellow-700 cursor-pointer" />
+  </form>
+
+  <section :show="result" class="mt-4 max-w-128">
+    <p :show="result.loading" class="text-center animate-pulse">Analyzing...</p>
+    <p class="text-center" :show="!result.loading">
+      <span :show="result.answer">✅</span>
+      <span :show="!result.answer">❌</span>
+      <span>The image</span>
+      <span :show="result.answer" class="text-bold text-green-800">DOES</span>
+      <span :show="!result.answer" class="text-bold text-red-800">DOES NOT</span>
+      <span>contain a yellow car.</span>
+    </p>
+    <p class="text-justify font-mono" :show="result.reason">{{ result.reason }}</p>
+  </section>
+</body>
+
+<script type="module">
+  const { $ } = Mancha;
+  $.loadImage = function (event) {
+    $.result = null;
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => $.set('image', event.target.result);
+      reader.onerror = (error) => console.error('Error reading file:', error);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  $.oracle = async function (event) {
+    $.result = { loading: true };
+    event.preventDefault();
+    $.result = await fetch('/api/oracle', {
+      body: $.image,
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+    }).then(res => res.json());
+  }
+</script>
+
+</html>
