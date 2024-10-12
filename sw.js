@@ -11,7 +11,7 @@ to yourself as "THE ORACLE" in the third person and start the rationale with
 
 * The color must be predominantly yellow.
 * At least 50% of the cab must be yellow, excluding anything being towed.
-* The vehicle must have at least 4 wheels and be road-worthy.
+* The vehicle must have at least 4 wheels and be legally road-worthy.
 
 Your response should be in JSON. It will be parsed as JSON as-is, so do not
 include anything other than the JSON portion. Here's the expected format:
