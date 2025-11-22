@@ -80,62 +80,17 @@
 </body>
 
 <script type="module">
+  import { RULES, callOracle } from './oracle.js';
   const { $ } = Mancha;
   globalThis.$ = $;
-  $.rules = [
-    'The color must be predominantly yellow, not a yellowish variant like lime or minty green, copper, amber or even beige.',
-    'At least 50% of the cab must be yellow, excluding anything being towed.',
-    'The vehicle must have at least 4 wheels and be legally road-worthy.',
-    'The vehicle must be a car; motorcycles, buses or construction equipment are not considered cars.',
-  ]
-
-  const GENAI_PROVIDER = "vertexai";
-  const GENAI_MODEL = 'gemini-1.5-pro'
-  const GENAI_URL = "https://functions.fresho.workers.dev/genai/completion.txt";
-  const GENAI_API_KEY = "eaee5f98-1e95-46e3-aa52-936da273c24d";
-  const GENAI_PROMPT = `
-We are playing a game of "spot the yellow car". As as AI-powered judge, your
-role is to determine whether the picture contains a yellow car and the
-rationale for your determination. You should use a very ominous tone, refer
-to yourself as "THE ORACLE" in the third person and start the rationale with
-"THE ORACLE SAYS". The rules are:
-
-${$.rules.map(x => '* ' + x).join('\n')}
-
-Your response should be in JSON. It will be parsed as JSON as-is, so do not
-include anything other than the JSON portion. Here's the expected format:
-
-{ "answer": <bool>, "reason": "THE ORACLE SAYS [...]" }
-
-Response:
-
-`;
-  console.log('prompt', GENAI_PROMPT)
-
-  async function throwableFetch(request) {
-    const response = await fetch(request);
-    if (!response.ok) throw new Error(await response.text());
-    return response;
-  }
+  $.rules = RULES;
 
   function handleOracleError(error) {
     console.error(error);
-    return new Response(
-      JSON.stringify({
+    return {
         answer: Math.random() > 0.5,
         reason: "THE ORACLE has chosen not to explain itself.",
-      })
-    );
-  }
-
-  function looseParseJSON(text) {
-    try {
-      return JSON.parse(
-        text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1)
-      );
-    } catch (e) {
-      return null;
-    }
+    };
   }
 
   $.loadImage = function (event) {
@@ -152,24 +107,11 @@ Response:
   $.oracle = async function (event) {
     $.result = { loading: true };
     event.preventDefault();
-    const forwardUrl = new URL(GENAI_URL);
-    forwardUrl.searchParams.set("provider", GENAI_PROVIDER);
-    forwardUrl.searchParams.set("model", GENAI_MODEL);
-    const forwardRequest = new Request(forwardUrl, {
-      method: "POST",
-      body: JSON.stringify({
-        text: GENAI_PROMPT,
-        media: $.image,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        "X-Fresho-Token": GENAI_API_KEY,
-      },
-    });
-    $.result = await throwableFetch(forwardRequest)
-      .then((res) => res.text())
-      .then(looseParseJSON)
-      .catch(handleOracleError)
+    try {
+      $.result = await callOracle($.image);
+    } catch (e) {
+      $.result = handleOracleError(e);
+    }
   }
 
   $.mount(document.body);
