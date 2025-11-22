@@ -44,8 +44,24 @@
     <h1 class="text-xl font-bold text-center">Yellow Car Game</h1>
     <details>
       <summary class="cursor-pointer text-center">View Game Rules</summary>
-      <ol class="space-y-2">
-        <li :for="rule in rules">{{ rule }}</li>
+      <ol class="space-y-2 list-decimal px-4 mt-2">
+        <li>
+          <strong>The vehicle must be a car.</strong>
+          <ul class="list-disc pl-4 mt-1 text-sm space-y-1">
+             <li>It must have at least 4 wheels and be legally road-worthy.</li>
+             <li>Motorcycles, buses, and construction equipment are excluded.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>The color must be predominantly yellow.</strong>
+          <ul class="list-disc pl-4 mt-1 text-sm space-y-1">
+             <li>At least 50% of the cab must be yellow.</li>
+             <li>Metallic yellows (e.g. Austin Yellow) and Pastel yellows (e.g. Vanilla) ARE acceptable.</li>
+             <li><strong>NOT Yellow:</strong> Cream, Beige, Bone, Sand, Champagne.</li>
+             <li><strong>Impostors:</strong> Gold, Bronze, Copper, dark Amber.</li>
+             <li><strong>Greenish variants:</strong> Lime, Acid Green, Chartreuse are NOT yellow.</li>
+          </ul>
+        </li>
       </ol>
     </details>
   </section>
@@ -80,10 +96,9 @@
 </body>
 
 <script type="module">
-  import { RULES, callOracle } from './oracle.js';
+  import { callOracle } from './oracle.js';
   const { $ } = Mancha;
   globalThis.$ = $;
-  $.rules = RULES;
 
   function handleOracleError(error) {
     console.error(error);
