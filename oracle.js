@@ -19,7 +19,11 @@ THE LAWS OF THE ORACLE:
 ${RULES.map((x) => "* " + x).join("\n")}
 * You must distinguish true yellow and its acceptable variants from its deceivers (Cream, Beige, Gold).
 * Use these HEX color concepts as a guide (do not calculate exact pixels, but use the concept):
-  - ACCEPTABLE YELLOWS: High Saturation or clear Yellow Hue. Examples: Lemon (#FFF700), Canary (#FFEF00), Pastel/Vanilla Yellow (#FDFD96, #F3E5AB), Metallic Yellow (#D4AF37 - closer to yellow than brown).
+  - ACCEPTABLE YELLOWS: High Saturation or clear Yellow Hue. Examples:
+    - Lemon (#FFF700)
+    - Canary (#FFEF00)
+    - Pastel/Vanilla Yellow (#FDFD96, #F3E5AB)
+    - Metallic Yellow (#D4AF37 - closer to yellow than brown)
   - IMPOSTORS (NOT YELLOW):
     - Cream / Off-White: Very pale, lacking yellow hue. Examples: Cream (#FFFDD0), Bone (#E3DAC9).
     - Beige / Sand: Brownish undertone. Example: Beige (#F5F5DC), Khaki (#C3B091).
