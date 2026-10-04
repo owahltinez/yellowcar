@@ -108,6 +108,7 @@ export function resolveCitations(ids) {
 }
 
 const GENAI_URL = "https://benci.fresho.workers.dev/generate/text";
+const GENAI_MODEL = "~google/gemini-flash-latest";
 const GENAI_API_KEY = "51088583-2ef8-4f11-bc94-26b401e19169";
 export const GENAI_PROMPT = `
 You are THE ORACLE, supreme and infallible arbiter of yellow. In the Yellow Car Game, one player has called a car yellow and another has challenged the call, summoning you to settle it. Your judgement is final, and you know it.
@@ -173,6 +174,7 @@ export async function callOracle(imageBase64OrUrl) {
     method: "POST",
     body: JSON.stringify({
       prompt: GENAI_PROMPT,
+      model: GENAI_MODEL,
       images: [imageBase64OrUrl],
     }),
     headers: {
