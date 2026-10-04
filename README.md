@@ -3,38 +3,23 @@
 The premise of the game is very simple. The first person to spot a yellow car earns a point. This
 tool uses an AI Oracle to determine whether an image contains a yellow car or not.
 
-## AI Oracle - Laws and Guidelines
+## The Oracle
 
-The AI Oracle has been meticulously trained and provided with strict laws and guidelines to accurately identify a "Yellow Car". These rules are critical for distinguishing true yellow from its many deceivers and include considerations for metallic and pastel variants, as well as clear definitions for non-yellow impostors.
+When one player calls a car yellow, another may challenge the call and invoke the Oracle. The
+challenge is a risk: if the Oracle upholds the yellow, the challenger loses a point.
 
-### Core Rules:
-*   The color must be predominantly yellow.
-*   Metallic yellows (like Austin Yellow, Solarbeam Yellow) ARE acceptable, even if they shimmer like gold.
-*   Pastel yellows (like Vanilla Yellow) ARE acceptable, but must still be clearly YELLOW, not Beige.
-*   Cream, Beige, Bone, Sand, and Champagne are NOT yellow. They are off-white or light brown.
-*   However, actual Gold, Bronze, Copper, and dark Amber are impostors.
-*   Greenish variants (Lime, Acid Green, Chartreuse) are NOT yellow.
-*   At least 50% of the cab must be yellow, excluding anything being towed.
-*   The vehicle must have at least 4 wheels and be legally road-worthy.
-*   The vehicle must be a car.
-
-### HEX Color Concepts (as a guide for the AI):
-These concepts are used to guide the AI's understanding of color distinctions. The AI does not calculate exact pixels but applies these conceptual boundaries.
-
-*   **ACCEPTABLE YELLOWS:** High Saturation or clear Yellow Hue.
-    *   Examples: Lemon (`#FFF700`), Canary (`#FFEF00`), Pastel/Vanilla Yellow (`#FDFD96`, `#F3E5AB`), Metallic Yellow (`#D4AF37` - closer to yellow than brown).
-
-*   **IMPOSTORS (NOT YELLOW):**
-    *   **Cream / Off-White:** Very pale, lacking yellow hue.
-        *   Examples: Cream (`#FFFDD0`), Bone (`#E3DAC9`).
-    *   **Beige / Sand:** Brownish undertone.
-        *   Examples: Beige (`#F5F5DC`), Khaki (`#C3B091`).
-    *   **Gold / Bronze:** Darker, brownish, low saturation.
-    *   **Lime:** Too much green.
+The Oracle judges strictly by the Rulebook, defined once as `RULEBOOK` in `oracle.js` and shown in
+the app. Every verdict cites the rules that decided it, quoted verbatim from the Rulebook.
 
 ## Testing Procedure
 
-To verify the Oracle's behavior and ensure it adheres to its laws, a Node.js test script (`test_oracle.js`) is provided. This script runs a suite of images (both yellow and non-yellow) against the Oracle and reports the results.
+Unit tests for the Rulebook and citation handling run offline:
+
+```bash
+node --test
+```
+
+To verify the Oracle's behavior and ensure it adheres to its laws, a Node.js test script (`test_oracle.js`) is provided. This script runs a suite of images (both yellow and non-yellow) against the live Oracle and reports the results. A verdict that cites no rules fails.
 
 ### Prerequisites
 *   Node.js (LTS version recommended)
@@ -53,7 +38,8 @@ The script will output the results for each test case, indicating whether it pas
 ## Project Structure
 
 *   `index.html`: The main game interface.
-*   `oracle.js`: Contains the core AI Oracle logic, including the rules and the `callOracle` function.
-*   `test_oracle.js`: The Node.js script for running automated tests against the Oracle.
+*   `oracle.js`: Contains the core AI Oracle logic, including the `RULEBOOK` and the `callOracle` function.
+*   `oracle_test.js`: Offline unit tests for the Rulebook and citation handling.
+*   `test_oracle.js`: The Node.js script for running automated tests against the live Oracle.
 *   `static/`: Directory containing all test images.
 *   `logo.png`, `manifest.json`, `sw.js`: Other static assets for the web application.

@@ -59,11 +59,12 @@ async function runTest(test) {
         const imageBase64 = imageToBase64(test.src);
         const result = await callOracle(imageBase64);
         
-        const passed = result.answer === test.expected;
+        const passed = result.answer === test.expected && result.citations.length > 0;
         return {
             ...test,
             passed,
             oracleAnswer: result.answer,
+            citations: result.citations.map(rule => rule.id),
             reason: result.reason
         };
     } catch (e) {
@@ -91,6 +92,7 @@ async function main() {
         const status = res.passed ? "\x1b[32m[PASSED]\x1b[0m" : "\x1b[31m[FAILED]\x1b[0m";
         console.log(`${status} ${res.name}`);
         console.log(`  Expected: ${res.expected}, Got: ${res.oracleAnswer ?? 'Error'}`);
+        if (res.citations) console.log(`  Citations: ${res.citations.join(', ') || 'NONE'}`);
         if (res.reason) console.log(`  Reason: ${res.reason}`);
         if (res.error) console.log(`  Error: ${res.error}`);
         console.log('');

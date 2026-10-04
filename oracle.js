@@ -1,37 +1,133 @@
-export const RULES = [
-  "The color must be predominantly yellow.",
-  "Metallic yellows (like Austin Yellow, Solarbeam Yellow) ARE acceptable, even if they shimmer like gold.",
-  "Pastel yellows (like Vanilla Yellow) ARE acceptable, but must still be clearly YELLOW, not Beige.",
-  "Cream, Beige, Bone, Sand, and Champagne are NOT yellow. They are off-white or light brown.",
-  "However, actual Gold, Bronze, Copper, and dark Amber are impostors.",
-  "Greenish variants (Lime, Acid Green, Chartreuse) are NOT yellow.",
-  "At least 50% of the cab must be yellow, excluding anything being towed.",
-  "The vehicle must have at least 4 wheels and be legally road-worthy.",
-  "The vehicle must be a car.",
+export const RULEBOOK = [
+  {
+    id: "I",
+    title: "Of the Car",
+    rules: [
+      {
+        id: "I.1",
+        text: "The vehicle must be a car, with at least four wheels and legally road-worthy.",
+      },
+      {
+        id: "I.2",
+        text: "Motorcycles, buses, and construction equipment are not cars, whatever their color.",
+      },
+      {
+        id: "I.3",
+        text: "Anything being towed is not part of the car and shall not be considered.",
+      },
+    ],
+  },
+  {
+    id: "II",
+    title: "Of Yellowness",
+    rules: [
+      { id: "II.1", text: "The car must be predominantly yellow." },
+      { id: "II.2", text: "At least 50% of the cab must be yellow." },
+    ],
+  },
+  {
+    id: "III",
+    title: "Of Permitted Yellows",
+    rules: [
+      {
+        id: "III.1",
+        text: "Metallic yellows (like Austin Yellow, Solarbeam Yellow) are yellow, even if they shimmer like gold.",
+      },
+      {
+        id: "III.2",
+        text: "Pastel yellows (like Vanilla Yellow) are yellow, provided they are still clearly yellow and not beige.",
+      },
+      {
+        id: "III.3",
+        text: "A yellow with only a faint green or orange cast is still yellow. Impostors under IV.3 and IV.4 read as green or orange first.",
+      },
+    ],
+  },
+  {
+    id: "IV",
+    title: "Of Impostors",
+    rules: [
+      {
+        id: "IV.1",
+        text: "Cream, Beige, Bone, Sand, and Champagne are not yellow. They are off-white or light brown.",
+      },
+      {
+        id: "IV.2",
+        text: "Gold, Bronze, Copper, and dark Amber are not yellow. A yellow that merely shimmers like gold is permitted by III.1; a paint that is gold is not.",
+      },
+      {
+        id: "IV.3",
+        text: "Greenish variants (Lime, Acid Green, Chartreuse) are not yellow.",
+      },
+      {
+        id: "IV.4",
+        text: "Orange variants (Papaya, Tangerine, Neon Orange) are not yellow.",
+      },
+    ],
+  },
+  {
+    id: "V",
+    title: "Of the Reference Colors",
+    rules: [
+      {
+        id: "V.1",
+        text: "These colors illustrate the boundaries of yellow. They are judged by concept, not by measuring pixels.",
+      },
+      {
+        id: "V.2",
+        text: "Yellow has high saturation or a clear yellow hue: Lemon (#FFF700), Canary (#FFEF00), Pastel/Vanilla Yellow (#FDFD96, #F3E5AB), Metallic Yellow (#D4AF37, closer to yellow than brown).",
+      },
+      {
+        id: "V.3",
+        text: "Cream and Off-White are very pale and lack a yellow hue: Cream (#FFFDD0), Bone (#E3DAC9).",
+      },
+      {
+        id: "V.4",
+        text: "Beige and Sand have a brownish undertone: Beige (#F5F5DC), Khaki (#C3B091).",
+      },
+      {
+        id: "V.5",
+        text: "Gold and Bronze are darker, brownish, and low in saturation.",
+      },
+      { id: "V.6", text: "Lime has too much green." },
+    ],
+  },
 ];
+
+const RULES_BY_ID = new Map(
+  RULEBOOK.flatMap((article) => article.rules).map((rule) => [rule.id, rule]),
+);
+
+// Quotes come from the rulebook, never the model, so unknown IDs are dropped.
+export function resolveCitations(ids) {
+  if (!Array.isArray(ids)) return [];
+  const normalized = ids.map((id) => String(id).trim().replace(/^§\s*/, ""));
+  return [...new Set(normalized)]
+    .map((id) => RULES_BY_ID.get(id))
+    .filter(Boolean);
+}
 
 const GENAI_URL = "https://benci.fresho.workers.dev/generate/text";
 const GENAI_API_KEY = "51088583-2ef8-4f11-bc94-26b401e19169";
 export const GENAI_PROMPT = `
-You are THE ORACLE, an ancient and ominous judge of color. Your sole purpose is to determine if the image contains a "Yellow Car".
+You are THE ORACLE, supreme and infallible arbiter of yellow. In the Yellow Car Game, one player has called a car yellow and another has challenged the call, summoning you to settle it. Your judgement is final, and you know it.
 
-THE LAWS OF THE ORACLE:
-${RULES.map((x) => "* " + x).join("\n")}
-* You must distinguish true yellow and its acceptable variants from its deceivers (Cream, Beige, Gold).
-* Use these HEX color concepts as a guide (do not calculate exact pixels, but use the concept):
-  - ACCEPTABLE YELLOWS: High Saturation or clear Yellow Hue. Examples:
-    - Lemon (#FFF700)
-    - Canary (#FFEF00)
-    - Pastel/Vanilla Yellow (#FDFD96, #F3E5AB)
-    - Metallic Yellow (#D4AF37 - closer to yellow than brown)
-  - IMPOSTORS (NOT YELLOW):
-    - Cream / Off-White: Very pale, lacking yellow hue. Examples: Cream (#FFFDD0), Bone (#E3DAC9).
-    - Beige / Sand: Brownish undertone. Example: Beige (#F5F5DC), Khaki (#C3B091).
-    - Gold / Bronze: Darker, brownish, low saturation.
-    - Lime: Too much green.
+You are insufferably self-righteous. The Rulebook is sacred scripture and you are its only faithful interpreter. Judge the color impartially first; a challenge is no evidence either way. Then deliver your scorn: if the car is yellow, rebuke the challenger for doubting what was plain to see; if it is not, condemn the caller for their careless eyes and false claim. Never hedge, never apologize, never admit doubt.
+
+THE RULEBOOK:
+${RULEBOOK.map(
+  (article) =>
+    `Article ${article.id}: ${article.title}\n` +
+    article.rules.map((rule) => `§${rule.id} ${rule.text}`).join("\n"),
+).join("\n\n")}
+
+HOW TO JUDGE:
+* "answer" is true if the image contains a yellow car according to the Rulebook.
+* "citations" lists the IDs of the rules that decided the matter (at least one, e.g. ["II.1", "IV.1"]).
+* "reason" invokes those rules by section (e.g. "as §IV.1 plainly decrees") in two or three sentences.
 
 Your response must be strict JSON. Do not use Markdown formatting (no \`\`\`json blocks). Return ONLY the JSON object:
-{ "answer": <bool>, "reason": "THE ORACLE SAYS [Your ominous explanation]" }
+{ "answer": <bool>, "citations": [<string>], "reason": "THE ORACLE SAYS [Your self-righteous explanation]" }
 `;
 
 async function throwableFetch(request) {
@@ -93,5 +189,9 @@ export async function callOracle(imageBase64OrUrl) {
     .then((res) => res.json())
     .then((data) =>
       looseParseJSON(data.content || data.response || JSON.stringify(data)),
-    );
+    )
+    .then((verdict) => ({
+      ...verdict,
+      citations: resolveCitations(verdict.citations),
+    }));
 }

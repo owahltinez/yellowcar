@@ -43,26 +43,11 @@
   <section class="max-w-128 mb-4">
     <h1 class="text-xl font-bold text-center">Yellow Car Game</h1>
     <details>
-      <summary class="cursor-pointer text-center">View Game Rules</summary>
-      <ol class="space-y-2 list-decimal px-4 mt-2">
-        <li>
-          <strong>The vehicle must be a car.</strong>
-          <ul class="list-disc pl-4 mt-1 text-sm space-y-1">
-             <li>It must have at least 4 wheels and be legally road-worthy.</li>
-             <li>Motorcycles, buses, and construction equipment are excluded.</li>
-          </ul>
-        </li>
-        <li>
-          <strong>The color must be predominantly yellow.</strong>
-          <ul class="list-disc pl-4 mt-1 text-sm space-y-1">
-             <li>At least 50% of the cab must be yellow.</li>
-             <li>Metallic yellows (e.g. Austin Yellow) and Pastel yellows (e.g. Vanilla) ARE acceptable.</li>
-             <li><strong>NOT Yellow:</strong> Cream, Beige, Bone, Sand, Champagne.</li>
-             <li><strong>Impostors:</strong> Gold, Bronze, Copper, dark Amber.</li>
-             <li><strong>Greenish variants:</strong> Lime, Acid Green, Chartreuse are NOT yellow.</li>
-          </ul>
-        </li>
-      </ol>
+      <summary class="cursor-pointer text-center">View the Rulebook</summary>
+      <section :for="article in rulebook" class="px-4 mt-2">
+        <h2 class="text-base font-bold">Article {{ article.id }}: {{ article.title }}</h2>
+        <p :for="rule in article.rules" class="text-sm my-1"><strong>§{{ rule.id }}</strong> {{ rule.text }}</p>
+      </section>
     </details>
   </section>
 
@@ -92,11 +77,14 @@
       <span>contain a yellow car.</span>
     </p>
     <p class="m-2 text-justify font-mono" :show="result.reason">{{ result.reason }}</p>
+    <blockquote :for="rule in result.citations || []" class="mx-4 my-2 pl-2 border-l-4 border-yellow-700 text-sm">
+      <strong>§{{ rule.id }}</strong> {{ rule.text }}
+    </blockquote>
   </section>
 </body>
 
 <script type="module">
-  import { callOracle } from './oracle.js';
+  import { RULEBOOK, callOracle } from './oracle.js';
   const { $ } = Mancha;
   globalThis.$ = $;
 
@@ -104,7 +92,7 @@
     console.error(error);
     return {
         answer: Math.random() > 0.5,
-        reason: "THE ORACLE has chosen not to explain itself.",
+        reason: "THE ORACLE has chosen not to explain itself. It owes you nothing.",
     };
   }
 
@@ -129,6 +117,7 @@
     }
   }
 
+  $.rulebook = RULEBOOK;
   $.mount(document.body);
 </script>
 
