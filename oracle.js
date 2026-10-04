@@ -27,6 +27,10 @@ export const RULEBOOK = [
     rules: [
       { id: "II.1", text: "The car must be predominantly yellow." },
       { id: "II.2", text: "At least 50% of the cab must be yellow." },
+      {
+        id: "II.3",
+        text: "A manufacturer's paint name is no evidence. Only the color as seen matters.",
+      },
     ],
   },
   {
