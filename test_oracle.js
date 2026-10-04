@@ -41,8 +41,13 @@ const TESTS = [
     { name: 'Isuzu Box Truck, Yellow Box, White Cab (edited)', src: 'static/isuzu_box_truck_yellow_box_white_cab.jpg', expected: false },
 ];
 
-// Every verdict must declare itself beyond appeal.
-const FINALITY = /final|irrevocab|irreversib|appeal|unalterab|immutab/i;
+// Every verdict must close by declaring THE ORACLE'S verdict final and beyond appeal.
+const FINAL = /final|irrevocab|irreversib|unalterab|immutab|eternal|everlast|forever|permanent|absolute/i;
+const UNAPPEALABLE = /appeal|disput|challeng|question|overturn|dissent|contest/i;
+function closesWithFinality(reason) {
+    const last = reason.trim().split(/(?<=[.!?])\s+/).pop();
+    return /THE ORACLE['’]S verdict is/.test(last) && FINAL.test(last) && UNAPPEALABLE.test(last);
+}
 
 function imageToBase64(filePath) {
     // Check if file exists with different extension if not found
@@ -69,7 +74,7 @@ async function runTest(test) {
         const result = await callOracle(imageBase64);
         
         const passed = result.answer === test.expected && result.citations.length > 0
-            && FINALITY.test(result.reason);
+            && closesWithFinality(result.reason);
         return {
             ...test,
             passed,
