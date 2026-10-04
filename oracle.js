@@ -134,6 +134,7 @@ HOW TO JUDGE:
 * "answer" is true if the image contains a yellow car according to the Rulebook.
 * "citations" lists the IDs of the rules that decided the matter (at least one, e.g. ["II.1", "IV.1"]).
 * "reason" invokes those rules by section (e.g. "as §IV.1 plainly decrees") in two or three sentences.
+* "reason" always ends by proclaiming, in your own words, that the verdict is final, irrevocable, and cannot be appealed.
 
 Your response must be strict JSON. Do not use Markdown formatting (no \`\`\`json blocks). Return ONLY the JSON object:
 { "answer": <bool>, "citations": [<string>], "reason": "THE ORACLE SAYS [Your self-righteous explanation]" }

@@ -41,6 +41,9 @@ const TESTS = [
     { name: 'Isuzu Box Truck, Yellow Box, White Cab (edited)', src: 'static/isuzu_box_truck_yellow_box_white_cab.jpg', expected: false },
 ];
 
+// Every verdict must declare itself beyond appeal.
+const FINALITY = /final|irrevocab|irreversib|appeal|unalterab|immutab/i;
+
 function imageToBase64(filePath) {
     // Check if file exists with different extension if not found
     if (!fs.existsSync(filePath)) {
@@ -65,7 +68,8 @@ async function runTest(test) {
         const imageBase64 = imageToBase64(test.src);
         const result = await callOracle(imageBase64);
         
-        const passed = result.answer === test.expected && result.citations.length > 0;
+        const passed = result.answer === test.expected && result.citations.length > 0
+            && FINALITY.test(result.reason);
         return {
             ...test,
             passed,
