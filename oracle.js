@@ -17,7 +17,7 @@ export const RULEBOOK = [
       },
       {
         id: "I.4",
-        text: "Anything being towed is not part of the car and shall not be considered.",
+        text: "Only the cab, the part of the vehicle that does the driving, is judged. For an ordinary car that is the whole body; a cargo box, a trailer, or anything being towed is not part of the car.",
       },
     ],
   },

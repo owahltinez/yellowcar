@@ -38,6 +38,7 @@ const TESTS = [
     { name: 'Ford F-100 Pickup Yellow', src: 'static/ford_f100_yellow.jpg', expected: true },
     { name: 'IC CE300 School Bus Yellow', src: 'static/ic_ce300_school_bus_yellow.png', expected: false },
     { name: 'DAF Tractor Unit Yellow', src: 'static/daf_tractor_unit_yellow.jpg', expected: false },
+    { name: 'Isuzu Box Truck, Yellow Box, White Cab (edited)', src: 'static/isuzu_box_truck_yellow_box_white_cab.jpg', expected: false },
 ];
 
 function imageToBase64(filePath) {
