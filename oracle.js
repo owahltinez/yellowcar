@@ -9,10 +9,14 @@ export const RULEBOOK = [
       },
       {
         id: "I.2",
-        text: "Motorcycles, buses, and construction equipment are not cars, whatever their color.",
+        text: "The car must be drivable by anyone holding a standard car license. A vehicle that requires a special license, such as a bus, semi truck, or heavy truck, is not a car.",
       },
       {
         id: "I.3",
+        text: "Motorcycles and construction equipment are not cars, whatever their color.",
+      },
+      {
+        id: "I.4",
         text: "Anything being towed is not part of the car and shall not be considered.",
       },
     ],

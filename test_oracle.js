@@ -33,6 +33,11 @@ const TESTS = [
     { name: 'Porsche 911 Cream White', src: 'static/porsche_911_cream.png', expected: false },
     { name: 'Fiat 500 Cappuccino Beige', src: 'static/fiat_500_cappuccino.jpg', expected: false },
     { name: 'Toyota FJ Cruiser Sand', src: 'static/toyota_fj_sand.jpg', expected: false },
+
+    // Article I: what counts as a car
+    { name: 'Ford F-100 Pickup Yellow', src: 'static/ford_f100_yellow.jpg', expected: true },
+    { name: 'IC CE300 School Bus Yellow', src: 'static/ic_ce300_school_bus_yellow.png', expected: false },
+    { name: 'DAF Tractor Unit Yellow', src: 'static/daf_tractor_unit_yellow.jpg', expected: false },
 ];
 
 function imageToBase64(filePath) {
